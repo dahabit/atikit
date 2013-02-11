@@ -71,7 +71,7 @@ host this with someone else. Otherwise apt-get install postfix.
 How to Install aTikit
 --------------------
 1. Checkout the Repo
-```git clone https://github.com/core3net/tikit.git```
+```git clone https://github.com/core3net/atikit.git```
 2. Create Database and import shell.sql
 3. Modify classes/config.inc.php and change the db configs and namespace prefix (and memcache)
 4. Login to the URL you have set up and create an account. The first account you create is 
