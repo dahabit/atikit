@@ -87,7 +87,9 @@ considered the admin account and providing company.
  SSL/TLS
  * General Settings - Update your Stripe Keys, General Settings, Dwolla Keys and Vitelity Keys if
  you are going to be using SMS. 
- 
+7. Add a cronjob that runs every minute to poll your queues for new emails. As an Example 
+```*/1 * * * * cd /web/sites/atikit/dev.tikit.co; /usr/bin/php poll.php > /dev/null 2>&1```
+
 Disclaimer
 -------------------
 This is my first project that I am releasing to the public. My code uses libraries that I have
