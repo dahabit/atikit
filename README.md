@@ -56,17 +56,6 @@ so we integrated their API.
 *vitelity.net* - Vitelity is a VOIP/SMS/vFAX provider. They were the best
 and easiest choice to go with when dealing with sending SMS.
 
-Requirements
-----------------------------
-1. PHP 5.4.x - You must have PHP 5.4 installed for aTikit to function. I did
-this on purpose. I'm tired of seeing old PHP installations out there; upgrade your stuff.
-2. Apache with mod_rewrite - I use .htaccess for my url dispatchers in this code. It started
-off as a bad habit, and ended as a bad habit.
-3. MySQL and Memcache - Both are required. Install MySQL 5.5. It's not required but
-you should be using it anyway.
-4. Postfix - If you are using exim, you have no idea what you are doing and need to probably
-host this with someone else. Otherwise apt-get install postfix.
-5. Debian - If you use centos, I pity the fool. 
 
 How to Install aTikit
 --------------------
@@ -94,9 +83,9 @@ file that you cannot understand why they are there, they probably aren't for thi
 
 Authors
 -------------------
-Chris Horne http://www.facebook.com/superawesome - chorne@core3networks.com
+Chris Horne - [fburl] 
 
 [stripe]: http://www.stripe.com
 [dwolla]: http://www.dwolla.com
 [vitelity]: http://www.vitelity.net
-
+[fburl]: http://www.facebook.com/superawesome
