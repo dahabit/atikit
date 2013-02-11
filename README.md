@@ -4,6 +4,8 @@ aTikit v1.0
   <img src="http://my.secrds.com/containers/04239a258eef046714f996913b6956ca/site/images/c3.gif">
 </a>
 
+<iframe width="560" height="315" src="http://www.youtube.com/embed/VVJ8gR1_EC4" frameborder="0" allowfullscreen></iframe>
+
 aTikit is a ticketing system that includes billing for some of the newest 
 merchant providers out there; namely [Stripe] and [Dwolla]. When looking
 for a system to help manage my web development projects I realized there
