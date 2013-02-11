@@ -4,7 +4,7 @@ aTikit v1.0
   <img src="http://my.secrds.com/containers/04239a258eef046714f996913b6956ca/site/images/c3.gif">
 </a>
 
-Installation Video http://www.youtube.com/embed/VVJ8gR1_EC4
+Installation Video http://www.youtube.com/watch_popup?v=VVJ8gR1_EC4&vq=hd1080
 
 aTikit is a ticketing system that includes billing for some of the newest 
 merchant providers out there; namely [Stripe] and [Dwolla]. When looking
