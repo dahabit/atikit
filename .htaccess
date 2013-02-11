@@ -1,0 +1,72 @@
+Options -Indexes
+Options +FollowSymLinks
+RewriteEngine On
+#RewriteCond %{HTTP_USER_AGENT} ^GSLFbot
+#RewriteRule ^.* - [F,L]
+
+
+#RewriteCond %{HTTP_HOST} !^www\.
+#RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [R=301,L]
+
+#RewriteCond %{SERVER_PORT} 80 
+#RewriteRule ^(.*)$ https://www.whoismy.com/$1 [R,L]
+
+RewriteRule ^logout/$ /logout.php [L,QSA]
+RewriteRule ^login/$ /login.php [L,QSA]
+RewriteRule ^login/signup/$ /login.php?signup=yes [L]
+
+#Admin
+RewriteRule ^admin/$ /admin.php [L,QSA]
+
+#Dwolla
+RewriteRule ^dwauth/(.*)/$ /dwauth.php?myid=$1 [L,QSA]
+RewriteRule ^dwauth/$ /dwauth.php [L,QSA]
+
+#Billing Page - Clients
+RewriteRule ^billing/$ /billing.php [L]
+RewriteRule ^billing/cancel/$ /billing.php?cancelsub=yes [L]
+RewriteRule ^billing/checking/$ /billing.php?checking=yes [L]
+RewriteRule ^billing/invoices/$ /billing.php?invoices=yes [L]
+RewriteRule ^billing/invoice/(.*)/$ billing.php?downloadInvoice=$1 [L]
+
+#Admin - Access Levels
+RewriteRule ^admin/levels/$ /admin.php?levels=yes [L]
+RewriteRule ^admin/level/delete/(.*)/$ /admin.php?deleteLevel=$1 [L]
+RewriteRule ^admin/level/(.*)/$ /admin.php?editLevel=$1 [L]
+
+#Admin - User Editor
+RewriteRule ^admin/users/$ /admin.php?users=yes [L]
+RewriteRule ^admin/user/delete/(.*)/$ /admin.php?deleteUser=$1 [L]
+RewriteRule ^admin/user/(.*)/$ /admin.php?editUser=$1 [L]
+
+#Admin - Queue Editor
+RewriteRule ^admin/queues/$ /admin.php?queues=yes [L]
+RewriteRule ^admin/queue/delete/(.*)/$ /admin.php?deleteQueue=$1 [L]
+RewriteRule ^admin/queue/(.*)/$ /admin.php?editQueue=$1 [L]
+
+#Admin - Settings
+RewriteRule ^admin/settings/$ /admin.php?settings=yes [L]
+
+#Admin - Stripe Console
+RewriteRule ^admin/stripe/$ /admin.php?stripe=yes [L]
+RewriteRule ^admin/billing/$ /admin.php?billing=yes [L]
+
+#Ticket Assignments and Operations
+RewriteRule ^ticket/$ /ticket.php [L]
+RewriteRule ^selfassign/(.*)/$ /index.php?selfAssign=$1 [L]
+RewriteRule ^assign/sub/(.*)/$ /ticket.php?assignSub=$1 [L]
+RewriteRule ^ticket/(.*)/(.*)/$ /ticket.php?tid=$1&viewTask=$2 [L]
+RewriteRule ^ticket/(.*)/$ /ticket.php?view=$1 [L]
+RewriteRule ^close/(.*)/$ /ticket.php?close=$1 [L]
+RewriteRule ^closetask/(.*)/$ /ticket.php?closeTask=$1 [L]
+
+#Statement Operations
+RewriteRule ^send/(.*)/$ /ticket.php?sendSOW=$1 [L]
+RewriteRule ^sow/remove/(.*)/(.*)/$ /ticket.php?removeSOWItem=$1&si=$2 [L]
+RewriteRule ^accept/(.*)/$ /accept.php?hash=$1 [L]
+RewriteRule ^download/sow/(.*)/$ /ticket.php?downloadSOW=$1 [L]
+
+RewriteRule ^notify/$ /notify.php [L,QSA]
+RewriteRule ^notify/count/$ /notify.php?getCount=yes [L,QSA]
+RewriteRule ^notify/clear/$ /notify.php?clear=yes [L,QSA]
+
