@@ -94,9 +94,9 @@ file that you cannot understand why they are there, they probably aren't for thi
 
 Authors
 -------------------
-Chris Horne - [fburl] 
+Chris Horne http://www.facebook.com/superawesome - chorne@core3networks.com
 
 [stripe]: http://www.stripe.com
 [dwolla]: http://www.dwolla.com
 [vitelity]: http://www.vitelity.net
-[fburl]: http://www.facebook.com/superawesome
+
