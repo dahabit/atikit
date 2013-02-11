@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Atikit by core3net</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Atikit</h1>
+        <p>Ticketing and Project Management system utilizing @stripe for credit card processing, @dwolla for bank transfers, and @vitelity for SMS Notifications. Create quotes, bill clients and set up recurring payments easily!</p>
+
+        <p class="view"><a href="https://github.com/core3net/atikit">View the Project on GitHub <small>core3net/atikit</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/core3net/atikit/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/core3net/atikit/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/core3net/atikit">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>aTikit v1.0</h1>
+
+<p><a href="http://www.core3networks.com">
+  <img src="http://my.secrds.com/containers/04239a258eef046714f996913b6956ca/site/images/c3.gif"></a></p>
+
+<p>Installation Video <a href="http://www.youtube.com/watch_popup?v=VVJ8gR1_EC4&amp;vq=hd1080">http://www.youtube.com/watch_popup?v=VVJ8gR1_EC4&amp;vq=hd1080</a></p>
+
+<p>aTikit is a ticketing system that includes billing for some of the newest 
+merchant providers out there; namely <a href="http://www.stripe.com">Stripe</a> and <a href="http://www.dwolla.com">Dwolla</a>. When looking
+for a system to help manage my web development projects I realized there
+wasn't anything out there that was simple to use, didn't cost much, and
+did everything I needed. I developed aTikit (from the phrase: "Did you
+put it in 'a ticket'?") to handle all my internal tasks, and be able
+to bill clients based on a statement of work. aTikit Comes with the 
+following functions: </p>
+
+<h2>Feature List</h2>
+
+<ol>
+<li>Administrative Inteface to create multiple Queues (i.e. billing, sales,
+technical support. <em>Supports Unlimited Queues</em>
+</li>
+<li>Manage Stripe.com Plans, Coupons and Track Payout Schedules</li>
+<li>Integrate Dwolla support so your customers can pay with Checking and
+avoid credit card fees.</li>
+<li>Unlimited Access Levels with <em>hide billing</em> support for agents who
+cannot see billing information.</li>
+<li>SMS Capabilities with <a href="http://www.vitelity.net">Vitelity</a>. Send SMS messages to key agents when
+a company is set to VIP status. Notifications when tickets are created and
+updated.</li>
+<li>Create Statements of Work (i.e Quotes). Quotes are sent to the customer's 
+e-mail address and can accept via an accept link to signify that they
+approve the quote and you can begin work.</li>
+<li>Ticket Tasks with each ticket. In order to keep tickets from getting 
+incredibly long, ticket tasks (or subtickets) are created and are only
+viewable by the providing company agents. Each task can be assigned
+to different agents and notations are provided for each.</li>
+<li>Customer notations can be made under the history tab only viewable by the 
+providing company.</li>
+</ol><h2>Future Plans</h2>
+
+<ol>
+<li>Create Partnerships - With the aTikit API you will be able to establish
+a partnership with another company and share tickets when applicable. For 
+instance, if you are a designer, and you have a web developer that you work
+with on a consistent basis, you can add them as a partner. Once added,
+the other company can be added to tickets on a as-needed per-ticket basis.</li>
+</ol><h2>Integrated Services</h2>
+
+<p><em>stripe.com</em> is used for Credit Card Processing. We did not go with any other
+providers like authorize.net because you have to keep cards on file. Stripe
+is a newer company, and we wanted to go with newer technology than archaic
+billing processors. 
+<em>dwolla.com</em> is used for bank to bank transfers. Dwolla.com is being used 
+all over the place and only charges $0.25 per transaction. Which is insane,
+so we integrated their API. 
+<em>vitelity.net</em> - Vitelity is a VOIP/SMS/vFAX provider. They were the best
+and easiest choice to go with when dealing with sending SMS.</p>
+
+<h2>Requirements</h2>
+
+<ol>
+<li>PHP 5.4.x - You must have PHP 5.4 installed for aTikit to function. I did
+this on purpose. I'm tired of seeing old PHP installations out there; upgrade your stuff.</li>
+<li>Apache with mod_rewrite - I use .htaccess for my url dispatchers in this code. It started
+off as a bad habit, and ended as a bad habit.</li>
+<li>MySQL and Memcache - Both are required. Install MySQL 5.5. It's not required but
+you should be using it anyway.</li>
+<li>Postfix - If you are using exim, you have no idea what you are doing and need to probably
+host this with someone else. Otherwise apt-get install postfix.</li>
+<li>Debian - If you use centos, I pity the fool. </li>
+</ol><h2>How to Install aTikit</h2>
+
+<ol>
+<li>Checkout the Repo
+<code>git clone https://github.com/core3net/atikit.git</code>
+</li>
+<li>Create Database and import shell.sql</li>
+<li>Modify classes/config.inc.php and change the db configs and namespace prefix (and memcache)</li>
+<li>Login to the URL you have set up and create an account. The first account you create is 
+considered the admin account and providing company.</li>
+<li>Update logo.png with your Company Logo. This is used for quotes that you send
+to clients. You can specify a different filename in the settings for quotes if needed.</li>
+<li>Click <em>ATIKIT ADMIN</em> at the top of the page. Update the settings in the following order:
+
+<ul>
+<li>Access Levels - Create your access levels that you will be using. At least add Administrator </li>
+<li>aTikit Users - Edit your admin user, and set your new access level.</li>
+<li>Queues - Create your queues. The email addresses you use for your queues must support IMAP with
+SSL/TLS</li>
+<li>General Settings - Update your Stripe Keys, General Settings, Dwolla Keys and Vitelity Keys if
+you are going to be using SMS. </li>
+</ul>
+</li>
+<li>Add a cronjob that runs every minute to poll your queues for new emails. As an Example 
+<code>*/1 * * * * cd /web/sites/atikit/dev.tikit.co; /usr/bin/php poll.php &gt; /dev/null 2&gt;&amp;1</code>
+</li>
+</ol><h2>Disclaimer</h2>
+
+<p>This is my first project that I am releasing to the public. My code uses libraries that I have
+developed over the years that help me do menial tasks. If you see some functions in my tools
+file that you cannot understand why they are there, they probably aren't for this project. </p>
+
+<h2>Authors</h2>
+
+<p>Chris Horne <a href="http://www.facebook.com/superawesome">http://www.facebook.com/superawesome</a> - <a href="mailto:chorne@core3networks.com">chorne@core3networks.com</a></p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/core3net">core3net</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
