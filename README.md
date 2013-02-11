@@ -58,15 +58,15 @@ and easiest choice to go with when dealing with sending SMS.
 
 Requirements
 ----------------------------
-PHP 5.4.x - You must have PHP 5.4 installed for aTikit to function. I did
+1. PHP 5.4.x - You must have PHP 5.4 installed for aTikit to function. I did
 this on purpose. I'm tired of seeing old PHP installations out there; upgrade your stuff.
-Apache with mod_rewrite - I use .htaccess for my url dispatchers in this code. It started
+2. Apache with mod_rewrite - I use .htaccess for my url dispatchers in this code. It started
 off as a bad habit, and ended as a bad habit.
-MySQL and Memcache - Both are required. Install MySQL 5.5. It's not required but
+3. MySQL and Memcache - Both are required. Install MySQL 5.5. It's not required but
 you should be using it anyway.
-Postfix - If you are using exim, you have no idea what you are doing and need to probably
+4. Postfix - If you are using exim, you have no idea what you are doing and need to probably
 host this with someone else. Otherwise apt-get install postfix.
-Debian - If you use centos, I pity the fool. 
+5. Debian - If you use centos, I pity the fool. 
 
 How to Install aTikit
 --------------------
