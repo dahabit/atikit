@@ -275,7 +275,7 @@ To respond to this ticket, you can reply to this e-mail or login to the support 
 		{
 			// Customer opened this ticket, we need to notify our admins. And notify the customers via email that the ticket was opened
 			$this->notifyProvider("$queueName Ticket #{$id} Opened", $params['ticket_title'], "/ticket/$id/");
-			$this->mailCompany($params['company_id'], "A new ticket has been created", "A new ticket has been created for your account. You may login to the support portal at $url or
+			$this->mailCompany($params['company_id'], "[#$id] ($params[ticket_title]) has been created", "A new ticket has been created for your account. You may login to the support portal at $url or
 reply to this email to post any updates to the ticket.");
 			$cname = $this->getCompanyById($params['company_id']);
 			$this->mailProvider("($queueName) Ticket #{$id} Opened By $cname", "
