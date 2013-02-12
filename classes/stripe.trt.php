@@ -125,6 +125,34 @@ trait c3stripe
 		return Stripe_Plan::all();
 	}
 	
+	public function stripe_deletePlan($planid)
+	{
+		try
+		{
+			$plan = Stripe_Plan::retrieve($planid);
+			$plan->delete();
+			return true;
+		}
+		catch (Exception $e)
+		{
+			return $e->getMessage(); 
+		}
+	}
+	
+	public function stripe_deleteCoupon($couponid)
+	{
+		try
+		{
+			$coupon = Stripe_Coupon::retrieve($couponid);
+			$coupon->delete();
+			return true;
+		}
+		catch (Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+	
 	public function stripe_getCoupons()
 	{
 		$coupons = Stripe_Coupon::all();

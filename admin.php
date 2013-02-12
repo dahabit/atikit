@@ -531,7 +531,7 @@ class admin extends core
 							$plan['name'],
 							"$" . number_format($plan['amount'] / 100,2),
 							$count,
-							"<a href='/admin/billing/stripe/removeplan/$plan[id]/'><i class='icon-remove'></i></a>"							
+							"<a class='get' href='/admin/billing/stripe/removeplan/$plan[id]/'><i class='icon-remove'></i></a>"							
 				];
 			}
 			$addPlan = button::init()->text("Create Plan")->addStyle('btn-inverse')->icon('plus')->isModalLauncher()->url('#createPlan')->render();
@@ -581,7 +581,7 @@ class admin extends core
 				$row[] = $coupon['duration'];
 				$row[] = $coupon['times_redeemed'] . "/" . $coupon['max_redemptions'];
 				$row[] = ($coupon['duration_in_months']) ? $coupon['duration_in_months'] . ' Months' : "Once";
-				$row[] = "<a href='/admin/billing/stripe/removecoupon/$coupon[id]/'><i class='icon-remove'></i></a>";
+				$row[] = "<a class='get' href='/admin/billing/stripe/removecoupon/$coupon[id]/'><i class='icon-remove'></i></a>";
 				if ($coupon['times_redeemed'] < $coupon['max_redemptions'])
 					$row[] = 'green';
 				else $row[] = 'red';
@@ -731,11 +731,39 @@ class admin extends core
 			$rows[] = [$this->fbTime($transfer['transfer_ts']), number_format($transfer['transfer_amt'],2)];
 		$table = table::init()->headers($headers)->rows($rows)->render();
 		$data .= widget::init()->span(2)->header('Payout Schedule')->icon('truck')->content($table)->istable(true)->render();
-		
-		
 		$this->export(base::row($data, true));		
 	}
 
+	public function removeStripePlan($content)
+	{
+		$planid = $content['removeplan'];
+		$result = $this->stripe_deletePlan($planid);
+		if ($result === true)
+		{
+			$json = [];
+			$json['url'] = '/admin/stripe/';
+			$json['action'] = 'reload';
+			$this->jsone('success', $json);
+		}
+		else
+			$this->failJson("Unable to Delete", $result);
+	}
+
+	public function removeStripeCoupon($content)
+	{
+		$couponid = $content['removecoupon'];
+		$result = $this->stripe_deleteCoupon($couponid);
+		if ($result === true)
+		{
+			$json = [];
+			$json['url'] = '/admin/stripe/';
+			$json['action'] = 'reload';
+			$this->jsone('success', $json);
+		}
+		else
+			$this->failJson("Unable to Delete", $result);
+	}
+	
 }
 
 
@@ -793,6 +821,10 @@ else if (isset($_POST['createPlan']))
 	$mod->createPlan($_POST);
 else if (isset($_POST['createCoupon']))
 	$mod->createCoupon($_POST);
+else if (isset($_GET['removeplan']))
+	$mod->removeStripePlan($_GET);
+else if (isset($_GET['removecoupon']))
+	$mod->removeStripeCoupon($_GET);
 
 //Billing
 else if (isset($_GET['billing']))

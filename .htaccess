@@ -50,6 +50,8 @@ RewriteRule ^admin/settings/$ /admin.php?settings=yes [L]
 #Admin - Stripe Console
 RewriteRule ^admin/stripe/$ /admin.php?stripe=yes [L]
 RewriteRule ^admin/billing/$ /admin.php?billing=yes [L]
+RewriteRule ^admin/billing/stripe/removeplan/(.*)/ /admin.php?removeplan=$1 [L]
+RewriteRule ^admin/billing/stripe/removecoupon/(.*)/ /admin.php?removecoupon=$1 [L]
 
 #Ticket Assignments and Operations
 RewriteRule ^ticket/$ /ticket.php [L]
