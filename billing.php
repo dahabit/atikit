@@ -359,7 +359,7 @@ public function updateToken($content)
 		$id = $content['downloadInvoice'];
 		$transaction = $this->query("SELECT * from transactions WHERE id='$id'")[0];
 		$ticket = $this->query("SELECT * from tickets WHERE id='$transaction[ticket_id]'")[0];
-		if (!$this->isMyTicket($ticket))
+		if (!$this->isMyTicket($ticket) && $transaction['ticket_id'])
 			$this->reloadTarget();
 		$this->ajax = true;
 		$this->createPDFInvoice($transaction, true);
