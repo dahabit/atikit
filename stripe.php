@@ -83,9 +83,9 @@ switch ($event->type) {
 		$revid = $mod->insert_id;
 		$mod->notifyCompany($company['id'], "Authorization Successful", "$" . number_format($realamount,2). " has been authorized for Ticket #$tid", "/ticket/$tid/");
 		if (preg_match('/in_/', $data['description']))
-			$mod->notifyProvider( "$data[description] Paid", "Settled Charge $" . $realamount . " (-$" . $realfee . ") from $company[company_name]", '/', true, false );
+			$mod->notifyProvider( "$data[description] Paid", "Settled Charge $" . $realamount . " (-$" . $realfee . ") from $company[company_name]", '/', true, false, $company['id']);
 		else 
-			$mod->notifyProvider( "New Charge Successful", "Settled Charge $" . $realamount . " (-$" . $realfee . ") from $company[company_name]", '/', true, false);
+			$mod->notifyProvider( "New Charge Successful", "Settled Charge $" . $realamount . " (-$" . $realfee . ") from $company[company_name]", '/', true, false, $company['id']);
 		$mod->mailCompany($cid, "Payment $".$realamount." Charged to Your Account", "A charge has been applied to your account. The details are below: 
 				
 Type: Credit Credit
@@ -103,8 +103,7 @@ This payment will be listed on your credit card statement as $myCompany.
 		$cid = $company['id'];
 		$amt = "$" . number_format ( @$data ['amount'] / 100, 2 );
 		$mod->log("Card Declined for  $company[company_name] for $amt", "stripeHooks");
-		
-		$mod->notifyProvider( "Charge Failed for $company[company_name]", "Investigate a " . $amt . " failed charge.", '/', true, false);
+		$mod->notifyProvider( "Charge Failed for $company[company_name]", "Investigate a " . $amt . " failed charge.", '/', true, false, $company['id']);
 		$mod->mailCompany($cid, "Your credit card was declined", "Oops. We tried to bill your card $amt and it was declined. Please login to the support portal and update your credit card details under the billing menu item.
 				
 Thank you for your attention in this matter!");
@@ -117,11 +116,10 @@ Thank you for your attention in this matter!");
 		$company = $mod->returnFieldFromTable ( "company_id", "users", "id='$uid'" );
 		$uid = $mod->returnFieldFromTable ( "id", "users", "user_stripe_id='$customer'" );
 		$name = $mod->getCompanyById($company);
-		$mod->mailAdmins("$name Cancellation", $name. " has cancelled their service.");
-		$mod->notifyAdmins($name . " has Cancelled", "$name has cancelled their service with whoismy.com", '#');
+		$mod->mailProvider("$name Cancellation", $name. " has cancelled their service.");
+		$mod->notifyProvider($name . " has Cancelled", "$name has cancelled their service with whoismy.com", '#', true, false, $company['id']);
 		break;
-	
-	
+
 	case "transfer.created" :
 		$sum = $data->summary;
 		$mod->query("INSERT into transfers SET transfer_amt='$data->amount', transfer_ts='$data->date', transfer_source='stripe'");

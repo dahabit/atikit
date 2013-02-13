@@ -218,12 +218,12 @@ class core
 		
 	}
 	
-	public function notifyProvider($title, $body, $url, $isBilling = false, $isAdmin = false)
+	public function notifyProvider($title, $body, $url, $isBilling = false, $isAdmin = false, $fromCID = null)
 	{
 		$cid = $this->returnFieldFromTable("id", "companies", "company_isprovider = true");
 		$users = $this->query("SELECT * from users WHERE company_id='$cid'");
 		foreach ($users AS $user)
-			$this->createNotification($user['id'], $title, $body, $url, null, $isBilling, $isAdmin);
+			$this->createNotification($user['id'], $title, $body, $url, $fromCID, $isBilling, $isAdmin);
 	}
 	
 	public function createNotification($uid, $title, $body, $url, $from = null, $isBilling = false, $isAdmin = false)
