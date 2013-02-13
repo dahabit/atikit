@@ -140,14 +140,14 @@ class ticket extends core
 							 'ticket_body' => $content['reply_body'],
 							 'ticket_status' => $status 
 				]);
-		
+		$pic = $this->getProfilePic($this->user->id);
 		$json['element'] = ".updatelist";
 		$json['gtitle'] = 'Reply Added';
 		$json['gbody'] = "Your reply was added.";
 		$json['content'] = base::singleFeed([
 				'author' => $this->getUserByID($this->user->id) . " (" . $this->getCompanyById($this->company->id) . ")",
 				'post' => nl2br($content['reply_body']),
-				'thumb' => $this->user->user_pic,
+				'thumb' => "/" . $pic,
 				'url' => '#',
 				'internal' => $internal,
 				'ago' => 'Just now']);
@@ -733,10 +733,7 @@ class ticket extends core
 		$data .= base::feed($items, 'taskPort');
 		else $data .= "<ul class='taskPort'></ul>";
 		// Now the form
-		
 		$data .= $this->taskUpdateForm($subticket);
-		
-		
 		$json = [];
 		$json['gtitle'] = "Task Loaded";
 		$json['gbody'] = $subticket['subticket_title'];
@@ -745,7 +742,6 @@ class ticket extends core
 		$json['restore'] = true; // Restore link values.
 		$json['content'] = $data;
 		$json['ev'] = "$('.viewportTitle').html('$subticket[subticket_title]'); "; 
-
 		$this->jsonE('success', $json);
 	}
 	
