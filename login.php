@@ -38,7 +38,13 @@ class login extends core
 		$button = button::init()->addStyle('post')->addStyle('btn-primary')->text('Login')->icon('arrow-right')->render();
 		$button .= "<span class='pull-right'>".button::init()->addStyle('btn-info')->icon('edit')->text('Create Account')->url('/login/signup/')->render()."</span>";
 		// Fix this... This is pitiful.
-		$this->export("
+		$this->export("	
+			<div id='notify-container' style='display:none'>
+				<div id='default'>
+                	<h1>#{title}</h1>
+                    <p>#{text}</p>
+                </div>
+			</div>
 				 <style type='text/css'>
             body {
                 padding-top: 40px;
@@ -100,7 +106,6 @@ class login extends core
 
             <div id='signup'>
                 <p><a href='#'>Forgot your password?</a></p>
-                
             </div>
 				</div>");
 		
