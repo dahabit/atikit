@@ -89,6 +89,8 @@ considered the admin account and providing company.
  you are going to be using SMS. 
 7. Add a cronjob that runs every minute to poll your queues for new emails. As an Example 
 ```*/1 * * * * cd /web/sites/atikit/dev.tikit.co; /usr/bin/php poll.php > /dev/null 2>&1```
+8. Make sure to create/chmod 777 the INSTALL-DIR/files folder. This is where profile pics and
+ticket uploads are stored.
 
 Disclaimer
 -------------------
