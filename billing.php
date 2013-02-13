@@ -339,6 +339,7 @@ public function updateToken($content)
 				case 'stripe' : $source = "Credit Card"; break;
 				case 'dwolla' : $source = "Checking Draft" ; break;
 				case 'check'  : $source = "Posted Check" ; break;
+				case 'cash'   : $source = "Cash" ; break;
 			}
 			$row = ["<a href='/ticket/$transaction[ticket_id]/'>$transaction[ticket_id]</a>",
 					date("m/d/y", $transaction['transaction_ts']),
