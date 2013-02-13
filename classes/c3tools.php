@@ -356,7 +356,7 @@ trait c3tools
     		$message = Swift_Message::newInstance();
     		$message->setSubject($subject);
     		if (!$from)
-    			$message->setFrom(['info@whoismy.com' => 'WhoIsMy Mail']);
+    			$message->setFrom([$this->getSetting('defaultEmail') => $this->getSetting('defaultName')]);
     		else
     			$message->setFrom($from);
     		$message->setTo([$email]);

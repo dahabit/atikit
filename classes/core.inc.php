@@ -471,8 +471,13 @@ reply to this email to post any updates to the ticket.");
 			$data .= "<li><a href='/admin/'>aTikit Admin</a></li>";
 			
 		}
-		$data .= "<li><a data-toggle='modal' href='#me'><i class='icon-user'></i></a></li>";
-		$data .= "<li><a href='/logout/'><i class='icon-signout'></i></a></li>";
+		$data .= "<li class='dropdown'><a data-toggle='dropdown' class='dropdown-toggle' href='/clients/'>
+					Options <b class='caret'></b></a>
+					<ul class='dropdown-menu'>
+						<li><a data-toggle='modal' href='#me'><i class='icon-user'></i>  My Profile</a></li>
+						<li><a href='/logout/'><i class='icon-signout'></i>  Logout</a></li>
+					</ul>
+			</li>";
 		$save = button::init()->addStyle('mpost')->addStyle('btn-info')->text('Save Profile')->formid('myProfileForm')->postVar('saveProfile')->id('true')->icon('ok')->render();
 		$this->exportModal(modal::init()->id('me')->header("My Profile")->content($this->getMyProfile())->footer($save)->render());
 		return $data;

@@ -31,13 +31,26 @@ class login extends core
 		parent::__construct(true);
 	}	
 
+	private function forgotForm()
+	{
+		$pre = "<img src='/assets/img/question.png' align='left' /><h3>Send New Password</h3><p>If you forgot your password you can enter the email address you signed up with and we will regenerate the password and email it to you.</p>";
+		$fields = [];
+		$fields[] = ['type' => 'input', 'var' => 'email_address', 'text' => 'E-mail Address:', 'bottom' => 'Enter the email address you have on file', 'placeholder' => 'email@yourdomain.com'];
+		$form = form::init()->id('forgotForm')->elements($fields)->post('/login/')->render();
+		return $pre.$form;
+	} 
+	
 	public function loginForm()
+	
 	{
 		$company = $this->getSetting("mycompany");
 		$this->export(base::subHeader($company, "Support and Project Management"));
 		$button = button::init()->addStyle('post')->addStyle('btn-primary')->text('Login')->icon('arrow-right')->render();
 		$button .= "<span class='pull-right'>".button::init()->addStyle('btn-info')->icon('edit')->text('Create Account')->url('/login/signup/')->render()."</span>";
 		// Fix this... This is pitiful.
+		$sendButton = button::init()->formid('forgotForm')->postVar('sendPassword')->
+						id(true)->text("Send Password")->addStyle('mpost')->message("Sending Password..")->addStyle('btn-primary')->icon('arrow-right')->render();
+		$this->exportModal(modal::init()->id('forgot')->header("Forgot Your Password?")->content($this->forgotForm())->footer($sendButton)->render());
 		$this->export("	
 			<div id='notify-container' style='display:none'>
 				<div id='default'>
@@ -105,7 +118,7 @@ class login extends core
             </form>
 
             <div id='signup'>
-                <p><a href='#'>Forgot your password?</a></p>
+                <p><a data-toggle='modal' data-target='#forgot' href='#'>Forgot your password?</a></p>
             </div>
 				</div>");
 		
@@ -193,6 +206,30 @@ class login extends core
 		$json['url'] = '/';
 		$this->jsone('success', $json);
 	}
+	
+	public function sendPassword($content)
+	{
+		$email = $content['email_address'];
+		$user = $this->query("SELECT id FROM users WHERE user_email='$email'")[0];
+		if (!$user)
+			$this->failJson('Unable to Send', 'We could not find that account. Please try again.');
+		$pass = $this->generatePassword(6);
+		$md5 = md5($pass);
+		$url = $this->getSetting("atikit_url");		
+		$this->query("UPDATE users SET user_password='$md5' WHERE id='$user[id]'");
+		$this->sendMail($email, "Your new password", "
+We have received a password change request for your account.
+				
+Your new password is: $pass
+				
+You can change this by logging into the support portal at $url and clicking Options / My Profile");
+		$json = [];
+		$json['gtitle'] =  'Password Sent';
+		$json['gbody'] = 'Your new password has been sent.';
+		$json['action'] = 'fade';
+		$this->jsone('success', $json);
+	}
+
 }
 
 $mod = new login();
@@ -202,5 +239,7 @@ else if (isset($_GET['signup']))
 	$mod->signup();
 else if (isset($_POST['createAccount']))
 	$mod->createAccount($_POST);
+else if (isset($_POST['sendPassword']))
+	$mod->sendPassword($_POST);
 else 
 	$mod->loginForm();
