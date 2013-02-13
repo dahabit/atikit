@@ -294,8 +294,7 @@ Body: ". str_replace("<br />", "\n", $params['ticket_body'])."
 		return $this->insert_id;
 		
 	}
-	
-		
+
 	public function updateTicket($params)
 	{
 		// Ticket id, status, body, internal?
@@ -336,7 +335,8 @@ To respond to this ticket, you can reply to this e-mail or login to the support 
 			// Customer opened this ticket, we need to notify our admins. And notify the customers via email that the ticket was opened
 			$id = $ticket['id'];
 			$this->notifyProvider("$queueName Ticket #{$id} Updated", $ticket['ticket_title'], "/ticket/$id/");
-			$this->mailCompany($ticket['company_id'], "[#$id] ($queueName) Updated ", "Your ticket has been updated in our system. You can login and respond at the following link: $url or
+			if (!$params['internal'])
+				$this->mailCompany($ticket['company_id'], "[#$id] ($queueName) Updated ", "Your ticket has been updated in our system. You can login and respond at the following link: $url or
 reply to this email to post any updates to the ticket.");
 			$cname = $this->getCompanyById($ticket['company_id']);
 			$this->mailProvider("($queueName) Ticket #{$id} Updated By $cname", "

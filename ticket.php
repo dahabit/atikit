@@ -147,7 +147,7 @@ class ticket extends core
 		$json['content'] = base::singleFeed([
 				'author' => $this->getUserByID($this->user->id) . " (" . $this->getCompanyById($this->company->id) . ")",
 				'post' => nl2br($content['reply_body']),
-				'thumb' => "/" . $pic,
+				'thumb' => $pic,
 				'url' => '#',
 				'internal' => $internal,
 				'ago' => 'Just now']);
