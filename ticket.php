@@ -249,18 +249,46 @@ class ticket extends core
 		if (!$company['company_dwollatoken'])
 		{
 			$table .= base::alert('info', 'No Dwolla Authorization', 'This company has not linked their Dwolla Account.');
-			$dwollaButtons = button::init()->url("/dwauth/$company[id]/")->text('Authorize Dwolla')->addStyle('btn-inverse')->icon('ok')->render();
+			
 		}
 		
 		$dwFooter = button::init()->text("Make Checking Payment")->isModalLauncher()->url('#dwollaSend')->addStyle('btn-info')->icon('money')->render();
+		$dwFooter .= button::init()->text("Post Alternate Payment")->isModalLauncher()->url('#alternate')->addStyle('btn-warning')->icon('check')->render();
 		$sendDwolla = button::init()->formid('dwollaSendForm')->addstyle('btn-success')->text('Initiate Payment')->icon('arrow-right')->addStyle('mpost')->postVar('dwollaSend')->id($ticket['id'])->render();
 		$this->exportModal(modal::init()->id('dwollaSend')->header('Make Payment With Dwolla')->content($this->dwollaSendForm($ticket))->footer($sendDwolla)->render());
-		$data .= widget::init()->span(6)->header('Checking Transactions')->content($table)->isTable()->rightHeader($dwollaButtons)->footer($dwFooter)->render();
+		
+		$postAlternateButton = button::init()->formid('alternateForm')->addstyle('btn-success')->text('Post Payment')->icon('arrow-right')->addStyle('mpost')->postVar('postPayment')->id($ticket['id'])->render();
+		$this->exportModal(modal::init()->id('alternate')->header('Post Alternate Payment')->content($this->alternateForm())->footer($postAlternateButton)->render());
+		$data .= widget::init()->span(6)->header('Checking Transactions')->content($table)->isTable()->footer($dwFooter)->render();
 		$data .= "</div>";
 		
 		return $data;
 		
 	}
+	
+	private function alternateForm()
+	{
+		$pre = "<img src='/assets/img/alternate.png' align='left' style='padding-right:10px'><p>This function is designed to allow you to post cash or mailed checks to a ticket for you and your customers' records. This will 
+				show up as an actual transation in your log as 'cash/check' in the aTikit Admin</p>";
+		$opts = [
+				['val' => 'check', 'text' => 'Check'],
+				['val' => 'cash', 'text' => 'Cash']
+		];
+		$span = [];
+		
+		$fields = [];
+		$fields[] = ['type' => 'select', 'text' => 'Type of Payment:', 'comment' => 'What type of payment did you recieve?', 'opts' => $opts, 'var' => 'payment_type'];
+		$fields[] = ['type' => 'input', 'span' => 3, 'text' => 'Check Number (if applicable)', 'var' => 'payment_checkno'];
+		$span[] = ['span' => 5, 'elements' => $fields];
+		$fields= [];
+		$fields[] = ['type' => 'input', 'text' => 'Payment Amount', 'var' => 'payment_amt', 'prepend' => '$'];
+		$fields[] = ['type' => 'textarea', 'rows' => 2, 'text' => 'Description', 'comment' => 'Enter short description to be shown on the invoice', 'var' => 'payment_desc'];
+		$span[] = ['span' => 5, 'elements' => $fields];
+		$form = form::init()->id('alternateForm')->spanelements($span)->post('/ticket/')->render();
+		return $pre.$form;
+	
+	}
+	
 
 	private function dwollaSendForm(&$ticket)
 	{
@@ -1107,6 +1135,31 @@ $url" . "/accept/$hash/", $ticket['queue_id'], $loc );
 		$this->jsone('success', $json);
 		
 	}
+	
+	public function postPayment($content)
+	{
+		if (!$this->isProvidingCompany())
+			$this->failJson("Access Denied", "You cannot complete this function.");
+		if (!$content['payment_amt'] || !$content['payment_desc'])
+			$this->failJSon("Unable to Post", "You must enter a dollar amount and a description.");
+		$tid = $content['postPayment'];
+		$ticket = $this->query("SELECT * from tickets WHERE id='$tid'")[0];
+		// Create Transaction
+		$transid = uniqid();
+		$now = time();
+		if ($content['payment_type'] == 'check')
+			$content['payment_desc'] = "Check #: $content[payment_checkno] - " . $content['payment_desc'];
+		$this->query("INSERT into transactions SET transaction_merchant_id='$transid', transaction_ts='$now', 
+				transaction_amount='$content[payment_amt]', transaction_fee='0.00', transaction_net='$content[payment_amt]',
+				transaction_source='$content[payment_type]', transaction_desc='$content[payment_desc]', ticket_id='$tid', company_id='$ticket[company_id]'");
+		$json = [];
+		$json['gtitle'] = "Payment Posted";
+		$json['gbody'] = "A payment of $".$content['payment_amt']." has been posted to the client's account";
+		$json['action'] = 'fade';
+		$this->jsone('success', $json);
+	}
+	
+	
 } // class
 
 
@@ -1154,3 +1207,5 @@ else if (isset($_POST['dwollaSend']))
 	$mod->createDwollaPayment($_POST);
 else if (isset($_GET['assignSub']))
 	$mod->assignSubTask($_GET);
+else if (isset($_POST['postPayment']))
+	$mod->postPayment($_POST);

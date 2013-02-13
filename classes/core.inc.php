@@ -603,6 +603,7 @@ reply to this email to post any updates to the ticket.");
 			case 'stripe' : $source = "Credit Card"; break;
 			case 'dwolla' : $source = "Checking Draft"; break;
 			case 'check'  : $source = "Posted Check"; break;
+			case 'cash'   : $source = "Cash" ; break;
 		}
 		
 			$line = array(
