@@ -173,7 +173,8 @@ class login extends core
 		$uid = $this->insert_id;
 		if (!$content['company_name'])
 		$content['company_name'] = $content['user_name'];
-		$this->query("INSERT into companies SET company_phone='$content[user_phone]', company_name='$content[company_name]', company_address='$content[company_address]', company_address2='$content[company_address2]',
+		$now = time();
+		$this->query("INSERT into companies SET company_since='$now', company_phone='$content[user_phone]', company_name='$content[company_name]', company_address='$content[company_address]', company_address2='$content[company_address2]',
 					company_city='$content[company_city]', company_state='$content[company_state]', company_zip='$content[company_zip]', company_admin='$uid'");
 		$cid = $this->insert_id;
 		$this->query("UPDATE users SET company_id='$cid' WHERE id='$uid'"); // Assign the company to that user.

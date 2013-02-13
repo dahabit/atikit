@@ -20,6 +20,10 @@ RewriteRule ^billing/checking/$ /billing.php?checking=yes [L]
 RewriteRule ^billing/invoices/$ /billing.php?invoices=yes [L]
 RewriteRule ^billing/invoice/(.*)/$ billing.php?downloadInvoice=$1 [L]
 
+#Admin - Client Area
+RewriteRule ^clients/$ /clients.php [L]
+RewriteRule ^clients/create/$ /clients.php?createClient=yes [L]
+RewriteRule ^client/(.*)/$ /clients.php?showClient=$1 [L]
 #Admin - Access Levels
 RewriteRule ^admin/levels/$ /admin.php?levels=yes [L]
 RewriteRule ^admin/level/delete/(.*)/$ /admin.php?deleteLevel=$1 [L]

@@ -132,7 +132,7 @@ class core
 	}
 	public function canSeeBilling()
 	{
-		$level = $this->query("SELECT * from levels WHERE id='{$this->user->level_id}'")[0];
+		$level = $this->query("SELECT * from levels WHERE id='{$this->user->level_id}'", true)[0];
 		if ($this->isAdmin()) return true;
 		if ($level['level_isbilling']) return true;
 		else return false;
