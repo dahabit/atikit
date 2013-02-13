@@ -201,8 +201,8 @@ public function updateToken($content)
 				['val' => 'NonProfit', 'text' => 'Non-Profit Account'],
 		];
 		$fields[] = ['type' => 'select', 'var' => 'd_type', 'opts' => $opts, 'text' => 'Type of Account:'];
-		$fields[] = ['type' => 'text', 'var' => 'd_org', 'text' => 'Company/Organization Name:', 'val' => $this->company->company_name];
-		$fields[] = ['type' => 'text', 'var' => 'd_ein', 'text' => 'EIN (If Applicable):'];
+		$fields[] = ['type' => 'input', 'var' => 'd_org', 'text' => 'Company/Organization Name:', 'val' => $this->company->company_name];
+		$fields[] = ['type' => 'input', 'var' => 'd_ein', 'text' => 'EIN (If Applicable):'];
 		$opts = [['val' => 'N', 'text' => 'No'], ['val' => 'Y', 'text' => 'Yes']];
 		$fields[] = ['type' => 'select', 'var' => 'd_terms', 'text' => 'Agree to Terms and Conditions?:', 'opts' => $opts];
 		$span[] = ['span' => 4, 'elements' => $fields];
