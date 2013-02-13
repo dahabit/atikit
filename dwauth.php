@@ -36,7 +36,7 @@ class dwauth extends core
 		
 		if (!$this->isProvidingCompany())
 			$myid = $this->company->id;
-		$Dwolla = new DwollaRestClient($this->getSetting('dwolla_app_key'), $this->getSetting('dwolla_app_secret'), $this->getSetting('atikit_url') . "dwauth/$myid/", $permissions);
+		$Dwolla = new DwollaRestClient($this->getSetting('dwolla_app_key'), $this->getSetting('dwolla_app_secret'), $this->getSetting('atikit_url') . "/dwauth/$myid/", $permissions);
 		if (!isset($content['code']))
 		{
 			$durl = $Dwolla->getAuthUrl();
