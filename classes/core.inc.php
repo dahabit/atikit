@@ -554,12 +554,13 @@ reply to this email to post any updates to the ticket.");
 		else return false;
 	}
 
-	public function createPDFInvoice(&$transaction, $inline = null)
+	public function createPDFInvoice(&$transaction, $inline = null, $transactions = null)
 	{
-		
 		$ticket = $this->query("SELECT * from tickets WHERE id='$transaction[ticket_id]'")[0];
 		$company = $this->query("SELECT * from companies WHERE company_isprovider = true")[0];
 		$client_company = $this->query("SELECT * from companies WHERE id='$ticket[company_id]'")[0];
+		$reference = ($ticket) ? $ticket['ticket_title'] : "Transaction $transaction[id]";
+			
 		require_once("invoice.inc.php");
 		$pdf = new c3invoice('P', 'mm', 'A4');
 		$pdf->AddPage();
@@ -578,7 +579,7 @@ reply to this email to post any updates to the ticket.");
 		$pdf->addReglement("Auto-Draft Credit");
 		$pdf->addEcheance(date("m/d/y", $transaction['transaction_ts']));
 		$pdf->addNumTVA($company['company_name']);
-		$pdf->addReference("Transaction: $transaction[id]");
+		$pdf->addReference($reference);
 		$cols=array( "TICKET"    => 23,
 				"DESCRIPTION"  => 89,
 				"METHOD"     => 26,
@@ -597,36 +598,51 @@ reply to this email to post any updates to the ticket.");
 		$y    = 109;
 		// Items
 		$ttl = 0;
-		
-		switch ($transaction['transaction_source'])
-		{
-			case 'stripe' : $source = "Credit Card"; break;
-			case 'dwolla' : $source = "Checking Draft"; break;
-			case 'check'  : $source = "Posted Check"; break;
-			case 'cash'   : $source = "Cash" ; break;
-		}
+		if (!$transactions) 
+			$transactions[] = $transaction; 
+		if ($transactions)
+			foreach ($transactions AS $transaction)
+			{
+				$ttl += $transaction['transaction_amount'];
+				switch ($transaction['transaction_source'])
+				{
+					case 'stripe' : $source = "Credit Card"; break;
+					case 'dwolla' : $source = "Checking Draft"; break;
+					case 'check'  : $source = "Posted Check"; break;
+					case 'cash'   : $source = "Cash" ; break;
+				}
+				
+					$line = array(
+						"TICKET"    => $ticket['id'],
+						"DESCRIPTION"  => $transaction['transaction_desc'],
+						"METHOD"     => $source,
+						"PRICE"      => number_format($transaction['transaction_amount'],2),
+						"POSTED DATE" =>  date("m/d/y", $transaction['transaction_ts']),
+						);
+					
+					$size = $pdf->addLine( $y, $line );
+					$y   += $size + 2;
+					$y   += $size + 2;
+			} // each
 		
 			$line = array(
-				"TICKET"    => $ticket['id'],
-				"DESCRIPTION"  => $transaction['transaction_desc'],
-				"METHOD"     => $source,
-				"PRICE"      => number_format($transaction['transaction_amount'],2),
-				"POSTED DATE" =>  date("m/d/y", $transaction['transaction_ts']),
-				);
-			
+					"TICKET"    => null,
+					"DESCRIPTION"  => null,
+					"METHOD"     => "TOTAL",
+					"PRICE"      => "$". number_format($ttl,2),
+					"POSTED DATE" => null
+			);
 			$size = $pdf->addLine( $y, $line );
 			$y   += $size + 2;
-		
-		
-		$line = array(
-				"TICKET"    => null,
-				"DESCRIPTION"  => null,
-				"METHOD"     => null,
-				"PRICE"      => null,
-				"POSTED DATE" => null
-				);
-		$size = $pdf->addLine( $y, $line );
-		$y   += $size + 2;
+			$line = array(
+					"TICKET"    => null,
+					"DESCRIPTION"  => null,
+					"METHOD"     => null,
+					"PRICE"      => null,
+					"POSTED DATE" => null
+			);
+			
+			
 		$size = $pdf->addLine( $y, $line );
 		$y   += $size + 2;
 		$size = $pdf->addLine( $y, $line );

@@ -99,7 +99,7 @@ class billing extends core
 		return $data;
 	}
 
-public function updateToken($content)
+	public function updateToken($content)
 	{
 		// Get Current Token - If none exists, then we need to create the customer w/ stripe and get their id
 			$stripeid = $this->returnFieldFromTable("company_stripeid", "companies", "id='{$this->company->id}'");
@@ -362,8 +362,10 @@ public function updateToken($content)
 		$ticket = $this->query("SELECT * from tickets WHERE id='$transaction[ticket_id]'")[0];
 		if (!$this->isMyTicket($ticket) && $transaction['ticket_id'])
 			$this->reloadTarget();
+		if ($ticket)
+			$transactions = $this->query("SELECT * from transactions WHERE ticket_id='$ticket[id]'");
 		$this->ajax = true;
-		$this->createPDFInvoice($transaction, true);
+		$this->createPDFInvoice($transaction, true, $transactions);
 	}
 	
 }
