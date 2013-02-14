@@ -113,7 +113,7 @@ class billing extends core
 				$this->stripe_updateCustomer($content['stripeToken'], $content['cid']);
 				$this->query("UPDATE companies SET company_stripetoken='$content[stripeToken]' WHERE id='{$this->company->id}'");
 			}
-			
+		$this->notifyProvider($this->company->company_name . " updated their Credit Card", "A new credit card was updated in the client's account", "/client/{$this->company->id}/");	
 		$this->reloadTarget("billing/?newcard=yes");
 	}
 	
