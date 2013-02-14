@@ -166,7 +166,9 @@ function c3Responder(data)
 	            	eval(data.ev);
 	            	
 	            	}
-	            
+	            $(data.button).html(data.oldval);
+                $(data.button).removeAttr('disabled');
+				$(data.button).fadeIn();   
 				
 			} //c3responder
 
