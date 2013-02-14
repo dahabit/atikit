@@ -159,32 +159,33 @@ class poll extends core
 			rsort($emails);
 		if (count($emails) > 0)
 			$this->query("UPDATE queues SET queue_lastmessage='".count($emails). " messages processed.' WHERE id='$current_mailbox[queue]'");
-		foreach($emails as $email_id)
-		{
-			// Fetch the email's overview and show subject, from and date.
-			$overview = imap_fetch_overview($stream,$email_id,0);
-			$subject = $overview[0]->subject;
-			$from = $overview[0]->from;
-			$date = $overview[0]->date;
-			$body = imap_fetchbody($stream, $email_id, '0');
-			$body .= imap_fetchbody($stream, $email_id, '1');
-			$body = $this->emailParseBody($body);
-			$body = strip_tags($body, "<p><br>");
-			$body = utf8_decode($body);
-			$newbody = null;
-			foreach (explode("\n", $body) AS $line)
+		if ($emails)
+			foreach($emails as $email_id)
 			{
-				if (!preg_match("/\>/i", $line))
-					$newbody .= $line . "\n";
+				// Fetch the email's overview and show subject, from and date.
+				$overview = imap_fetch_overview($stream,$email_id,0);
+				$subject = $overview[0]->subject;
+				$from = $overview[0]->from;
+				$date = $overview[0]->date;
+				$body = imap_fetchbody($stream, $email_id, '0');
+				$body .= imap_fetchbody($stream, $email_id, '1');
+				$body = $this->emailParseBody($body);
+				$body = strip_tags($body, "<p><br>");
+				$body = utf8_decode($body);
+				$newbody = null;
+				foreach (explode("\n", $body) AS $line)
+				{
+					if (!preg_match("/\>/i", $line))
+						$newbody .= $line . "\n";
+				}
+				$body = $newbody;
+				//print_r(imap_fetchstructure($stream, $email_id));
+				$this->processEmail($from, $subject, $body, $current_mailbox['queue']);
+				imap_delete($stream, $email_id);
 			}
-			$body = $newbody;
-			//print_r(imap_fetchstructure($stream, $email_id));
-			$this->processEmail($from, $subject, $body, $current_mailbox['queue']);
-			imap_delete($stream, $email_id);
-		}
-		// Close our imap stream.
-		imap_expunge($stream);
-		imap_close($stream);
+			// Close our imap stream.
+			imap_expunge($stream);
+			imap_close($stream);
 		}
 	}
 } //poll
