@@ -487,6 +487,7 @@ reply to this email to post any updates to the ticket.");
 	private function getMyProfile()
 	{
 		$pre = "<p>Your profile is used to determine how you get updates to your tickets, billing notifications as well as your picture that is shown for your ticket updates.</p>";
+		$span = [];
 		$fields = [];
 		$fields[] = ['type' => 'ajax', 'id' => 'profilePicture', 'text' => 'Profile Picture:'];
 		$fields[] = ['type' => 'password', 'var' => 'user_password', 'text' => 'Change Password:'];
@@ -498,9 +499,13 @@ reply to this email to post any updates to the ticket.");
 		$opts[] = ['val' => 'Y', 'text'  => 'Yes'];
 		$opts[] = ['val' => 'N', 'text' => 'No'];
 		$fields[] = ['type' => 'select', 'var' => 'user_cansms', 'opts' => $opts, 'text' => 'Send Text Messages?', 'comment' => 'If set to Yes, you will be sent a text when tickets are updated or you are billed.'];
+		$span[] = ['span' => 6, 'elements' => $fields];
+		$fields = [];
+		$fields[] = ['type' => 'input', 'text' => 'Other E-mail Addresses:', 'var' => 'user_altemails', 'val' => $this->user->user_altemails, 'comment' => "Enter any secondary email addresses separated by commas"];
+		$span[] = ['span' => 6, 'elements' => $fields];
 		$this->exportJS(js::maskInput('sms', '1-999-999-9999'));
 		$this->exportJS(js::ajaxFile('profilePicture', "profilePic"));
-		return $pre . form::init()->id('myProfileForm')->post('/')->elements($fields)->render();
+		return $pre . form::init()->id('myProfileForm')->post('/')->spanelements($span)->render();
 	}
 	
 	public function processFile ($loc, $code)
