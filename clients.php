@@ -74,13 +74,22 @@ class clients extends core
 		$cid = $this->insert_id;
 		$this->query("UPDATE users SET company_id='$cid' WHERE id='$uid'"); // Assign the company to that user.
 	
-		// Check to see if this is the first company? or if we have a provider yet?
-		$ccount = $this->returnCountFromTable("companies", "company_isprovider = true");
-		if ($ccount == 0)
-		{
-			$this->query("UPDATE companies SET company_isprovider = true where id='$cid'");
-			$this->querY("UPDATE users SET user_isadmin=TRUE where id='$uid'");
-		}
+			
+		// In the admin side we want to notify customers they have an account vs on the login
+		// page where we just notified the company.
+		$weare = $this->getSetting("mycompany");
+		$url = $this->getSetting("atikit_url");
+		$defaultEmail = $this->getSetting("defaultEmail");
+		$this->mailCompany($cid, "New Account Created with {$weare}", 
+"This email is to inform you that you have been created a new account on the support system, aTikit, currently used by {$weare}. Here are the details to your new account!
+
+URL/Link: $url
+E-mail Address: $content[user_email]
+Password: $content[user_password]
+
+You can login and change your password by going to the options menu and clicking My Profile. 
+If you have any questions please feel free to email $defaultEmail");
+		
 		$json = [];
 		$json['gtitle'] = 'Account Created';
 		$json['gbody'] = 'New Client Account has been created.';
@@ -105,10 +114,15 @@ class clients extends core
 		$companies = $this->query("SELECT * from companies ORDER by company_since DESC");
 		foreach ($companies AS $company)
 		{
+			$tcontent = null;
+			$ticks = $this->query("SELECT id,ticket_title FROM tickets WHERE company_id='$company[id]' ORDER by ticket_opents DESC LIMIT 10");
+			foreach ($ticks AS $tick)
+				$tcontent .= "<a href='/ticket/$tick[id]/'>$tick[ticket_title]</a><br/>";
+			$ticketblock = base::popover("Ticket History", $tcontent, 'right');
 			$row = ["<a href='/client/$company[id]/'>$company[company_name]</a>",
 					"$company[company_address], $company[company_city], $company[company_state]",
 					($company['company_vip']) ? "Yes" : "No",
-					$this->returnCountFromTable("tickets", "company_id='$company[id]'")
+					"<a href='#' $ticketblock>".$this->returnCountFromTable("tickets", "company_id='$company[id]'")."</a>"
 					
 			];
 			if ($this->canSeeBilling())

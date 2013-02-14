@@ -40,6 +40,7 @@ jQuery(document).ready(function ($) {
      .popover({
      html: true,
      trigger: 'hover',
+     delay: { show: 100, hide: 1500 }
      
 });
 	

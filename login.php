@@ -186,6 +186,10 @@ class login extends core
 			$this->query("UPDATE companies SET company_isprovider = true where id='$cid'");
 			$this->querY("UPDATE users SET user_isadmin=TRUE where id='$uid'");
 		}
+		// Send notification to Providing Company - Don't send one to the customer because
+		// they just signed up. No sense in being like "Hey.. " when they know what they just did.
+		$this->mailProvider($content['company_name']. " created an account.", "$content[company_name] ($content[user_name]) created an account in aTikit.");
+		$this->notifyProvider("New Customer Alert", "$content[company_name] created a new account.",  "/client/$cid/");
 		$_SESSION[config::APP_NAMESPACE] = $uid;
 		$json = [];
 		$json['gtitle'] = 'Account Created';
