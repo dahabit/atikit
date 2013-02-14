@@ -662,10 +662,7 @@ class ticket extends core
 	
 	private function getSubTickets(&$ticket)
 	{
-		// Lets try to ajax this as much as possible just for the UX
 		$subs = $this->query("SELECT * from subtickets WHERE ticket_id='$ticket[id]'");
-		// Lets make this a nav like the admin.. just for aesthetics. 
-		
 		$addButton .= button::init()->isModalLauncher()->text('Add Task')->url('#addTask')->addStyle('btn-inverse')->addStyle('btn-block')->withGroup(false)->icon('plus')->render();
 		$data = "<div class='row-fluid'>
 				<div class='span6'>";
@@ -684,7 +681,7 @@ class ticket extends core
 		if (!$subs)
 			$data .= "<h4>No tasks found</h4>";
 		else
-			$data .= table::init()->headers($headers)->rows($rows)->render();
+			$data .= table::init()->id('tasks')->headers($headers)->rows($rows)->render();
 		$data .= "$addButton</div>";
 		
 		
@@ -725,8 +722,8 @@ class ticket extends core
 		$json['gtitle'] = "Task Added";
 		$json['gbody'] = "You have successfully added a task.";
 		$json['action'] = 'append';
-		$json['element'] = '.tasks';
-		$json['content'] = "<li><a class='get' href='/ticket/$tid/$subid/'><i class='icon-tasks'></i> $content[subticket_title]</a></li>";
+		$json['element'] = '#tasks';
+		$json['content'] = "<tr><td><a class='get' href='/ticket/$tid/$subid/'>$content[subticket_title]</a></td><td>Unassigned</td><td>{$this->user->user_name}</td><td>Just Now!</td></tr>";
 		$this->jsone('success', $json);
 	}
 	
@@ -758,7 +755,7 @@ class ticket extends core
 				'thumb' => $this->getProfilePic($reply['user_id'])
 				];
 		if ($items)
-		$data .= base::feed($items, 'taskPort');
+			$data .= base::feed($items, 'taskPort');
 		else $data .= "<ul class='taskPort'></ul>";
 		// Now the form
 		$data .= $this->taskUpdateForm($subticket);
@@ -830,8 +827,15 @@ class ticket extends core
 		$json = [];
 		$json['gtitle'] = "Task Updated";
 		$json['gbody'] = "Your task has been updated";
-		$json['action'] = 'reload';
-		$json['url'] = "/ticket/$ticket[id]/";
+		$json['action'] = 'append';
+		$json['element'] = '.taskPort';
+		$pic = $this->getProfilePic($this->user->id);
+		$json['content'] = base::singleFeed([
+				'author' => $this->getUserByID($this->user->id) . " (" . $this->getCompanyById($this->company->id) . ")",
+				'post' => nl2br($content['reply_body']),
+				'thumb' => $pic,
+				'url' => '#',
+				'ago' => 'Just now']);
 		$this->jsone('success', $json);
 	}
 	
