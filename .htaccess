@@ -56,6 +56,7 @@ RewriteRule ^ticket/(.*)/(.*)/$ /ticket.php?tid=$1&viewTask=$2 [L]
 RewriteRule ^ticket/(.*)/$ /ticket.php?view=$1 [L]
 RewriteRule ^close/(.*)/$ /ticket.php?close=$1 [L]
 RewriteRule ^closetask/(.*)/$ /ticket.php?closeTask=$1 [L]
+RewriteRule ^email/file/(.*)/$ /ticket.php?emailFile=$1 [L]
 
 #Statement Operations
 RewriteRule ^send/(.*)/$ /ticket.php?sendSOW=$1 [L]

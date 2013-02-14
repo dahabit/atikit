@@ -41,9 +41,11 @@ jQuery(document).ready(function ($) {
      html: true,
      trigger: 'hover',
      delay: { show: 100, hide: 1500 }
-     
 });
 	
+	 $("[rel=tooltip]").tooltip({
+	     trigger: 'hover',
+	     animation: true  });
 	
 	
 function c3Responder(data)

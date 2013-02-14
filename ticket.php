@@ -84,7 +84,7 @@ class ticket extends core
 		$headers = ['Description', 'Type', 'From', 'When'];
 		$rows = [];
 		foreach ($files AS $file)
-			$rows[] = ["<a href='/$file[file_loc]'>$file[file_title]</a>", $file['file_type'], $this->getUserByID($file['user_id']), $this->fbTime($file['file_ts'])];
+			$rows[] = ["<a href='/$file[file_loc]'>$file[file_title]</a> <a style='padding-left:10px;' class='get' data-title='E-mailing File' rel='tooltip' title='Email File' href='/email/file/$file[id]/'><i class='icon-envelope-alt'></i></a>", $file['file_type'], $this->getUserByID($file['user_id']), $this->fbTime($file['file_ts'])];
 		
 		$table = table::init()->headers($headers)->rows($rows)->render();
 		return widget::init()->icon('download')->header('Ticket Attachments')->content($table)->isTable()->render();
@@ -1158,7 +1158,21 @@ $url" . "/accept/$hash/", $ticket['queue_id'], $loc );
 		$json['action'] = 'fade';
 		$this->jsone('success', $json);
 	}
-	
+	public function emailFile($content)
+	{
+		$id = $content['emailFile'];
+		$file = $this->query("SELECT * from files WHERE id='$id'")[0];
+		$ticket = $this->query("SELECT * from tickets WHERE id='$file[ticket_id]'")[0];
+		if (!$this->isMyTicket($ticket))
+			$this->failJson("Access Denied", "This is not your file!");
+		$this->mailCompany($ticket['company_id'], "[#$ticket[id]] Attachment Sent: $file[file_title]", "Please find the following attachment: $file[file_title]", $ticket['queue_id'], $file['file_loc']);
+		$json = [];
+		$json['gtitle'] = "File E-mailed";
+		$json['gbody'] = "File emailed to email address on file.";
+		$json['action'] = 'reassignsource';
+		$json['elementval'] = "<i class='icon-share'></i>";
+		$this->jsone('success', $json);
+	}
 	
 } // class
 
@@ -1209,3 +1223,5 @@ else if (isset($_GET['assignSub']))
 	$mod->assignSubTask($_GET);
 else if (isset($_POST['postPayment']))
 	$mod->postPayment($_POST);
+else if (isset($_GET['emailFile']))
+	$mod->emailFile($_GET);
