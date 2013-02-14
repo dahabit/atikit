@@ -728,7 +728,7 @@ class admin extends core
 		$now = time();
 		$transfers = $this->query("SELECT * from transfers WHERE transfer_ts > $now ORDER by transfer_ts DESC");
 		foreach ($transfers AS $transfer)
-			$rows[] = [$this->fbTime($transfer['transfer_ts']), number_format(($transfer['transfer_amt']/2),2)];
+			$rows[] = [$this->fbTime($transfer['transfer_ts']), number_format(($transfer['transfer_amt']/100),2)];
 		$table = table::init()->headers($headers)->rows($rows)->render();
 		$data .= widget::init()->span(2)->header('Payout Schedule')->icon('truck')->content($table)->istable(true)->render();
 		$this->export(base::row($data, true));		
